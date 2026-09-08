@@ -1,0 +1,16 @@
+{
+  "name": "mistral-cors-proxy",
+  "version": "1.0.0",
+  "description": "Tiny CORS proxy so the browser-based translator app can call Mistral's API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  }
+}
