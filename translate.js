@@ -51,6 +51,44 @@ function partsToContent(parts) {
 }
 
 export default async function handler(req, res) {
+
+  // TEMPORARY TEST - remove after testing
+  if (req.method === 'GET') {
+    const gatewayKey = process.env.AI_GATEWAY_API_KEY;
+
+    if (!gatewayKey) {
+      return res.status(200).json({
+        keyPresent: false,
+        message: 'AI_GATEWAY_API_KEY is NOT available to this deployment'
+      });
+    }
+
+    try {
+      const testResponse = await fetch(
+        'https://ai-gateway.vercel.sh/v1/models',
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${gatewayKey}`,
+          },
+        }
+      );
+
+      const testBody = await testResponse.text();
+
+      return res.status(200).json({
+        keyPresent: true,
+        gatewayStatus: testResponse.status,
+        gatewayResponse: testBody.slice(0, 500),
+      });
+    } catch (error) {
+      return res.status(200).json({
+        keyPresent: true,
+        error: error.message,
+      });
+    }
+  }
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
